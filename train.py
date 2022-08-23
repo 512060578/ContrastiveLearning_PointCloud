@@ -41,26 +41,6 @@ for d in filenames:
 train_points_r = train_points.reshape(-1, num_points, 3)
 train_labels_r = train_labels.reshape(-1, 1)
 
-# load test points and labels
-test_path = os.path.join(path, "PrepData_test")
-filenames = [d for d in os.listdir(test_path)]
-print(test_path)
-print(filenames)
-test_points = None
-test_labels = None
-for d in filenames:
-    cur_points, cur_labels = load_h5(os.path.join(test_path, d))
-    cur_points = cur_points.reshape(1, -1, 3)
-    cur_labels = cur_labels.reshape(1, -1)
-    if test_labels is None or test_points is None:
-        test_labels = cur_labels
-        test_points = cur_points
-    else:
-        test_labels = np.hstack((test_labels, cur_labels))
-        test_points = np.hstack((test_points, cur_points))
-test_points_r = test_points.reshape(-1, num_points, 3)
-test_labels_r = test_labels.reshape(-1, 1)
-
 train_ds = tf.data.Dataset.from_tensor_slices(train_points_r)
 
 train_ds = (
