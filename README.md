@@ -17,7 +17,7 @@ Run `train.py`
 Then the trained weight will be saved in the local.
 
 # Linear evaluation
-Modify the `model_name` in `linear_evaluation.py` to the weight saved by training the model
+Modify the `model_name` in `linear_evaluation.py` to the weight saved by training the model  
 Run `linear_evaluation.py`  
 The plot for training history and t-SNE  will be saved.
 
