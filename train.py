@@ -20,26 +20,21 @@ def load_h5(h5_filename):
     label = f['label'][:]
     return (data, label)
 
-# load train points and labels
+# load train points
 path = os.path.dirname(os.path.realpath(__file__))
 train_path = os.path.join(path, "Data_Train")
 filenames = [d for d in os.listdir(train_path)]
 print(train_path)
 print(filenames)
 train_points = None
-train_labels = None
 for d in filenames:
-    cur_points, cur_labels = load_h5(os.path.join(train_path, d))
+    cur_points, _ = load_h5(os.path.join(train_path, d))
     cur_points = cur_points.reshape(1, -1, 3)
-    cur_labels = cur_labels.reshape(1, -1)
-    if train_labels is None or train_points is None:
-        train_labels = cur_labels
+    if train_points is None:
         train_points = cur_points
     else:
-        train_labels = np.hstack((train_labels, cur_labels))
         train_points = np.hstack((train_points, cur_points))
 train_points_r = train_points.reshape(-1, num_points, 3)
-train_labels_r = train_labels.reshape(-1, 1)
 
 train_ds = tf.data.Dataset.from_tensor_slices(train_points_r)
 
