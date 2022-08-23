@@ -4,7 +4,7 @@ This is contrastive learning structure for point cloud datasets that adopted tra
 Package requirement: Python3.6, keras, tensorflow2.0, numpy, matplotlib, h5py, tqdm
 
 ## Dataset Download
-Some data sample are provided in the repository  
+Some sample data are provided in the repository  
 To download the full dataset:
 - ModelNet40 [Link](https://shapenet.cs.stanford.edu/media/modelnet40_ply_hdf5_2048.zip)
 - ModelNet10 [Link](https://cloud.tsinghua.edu.cn/f/b3d9fe3e2a514def8097/)  
