@@ -22,7 +22,7 @@ def load_h5(h5_filename):
 
 # load train points and labels
 path = os.path.dirname(os.path.realpath(__file__))
-train_path = os.path.join(path, "PrepData")
+train_path = os.path.join(path, "Data_Train")
 filenames = [d for d in os.listdir(train_path)]
 print(train_path)
 print(filenames)
