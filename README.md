@@ -1,7 +1,7 @@
 # Contrastive Learning on 3D Point Clouds with Data Augmentation
 This is contrastive learning structure for point cloud datasets that adopted transformation for data augmentation  
   
-Package requirement: Python3.6, keras, tensorflow2.0, numpy, matplotlib, h5py, tqdm
+Package requirement: Python3.8, keras, tensorflow2.8.0, numpy, matplotlib, h5py, tqdm
 
 ## Dataset Download
 Some sample data are provided in the repository  
