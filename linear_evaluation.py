@@ -1,14 +1,12 @@
 from sklearn.manifold import TSNE
 import tensorflow as tf
 import matplotlib.pyplot as plt
-from imutils import paths
-from tqdm import tqdm
 import os
 import tensorflow as tf
 import seaborn as sns
 import numpy as np
 import h5py
-import cv2
+
 
 # name of the trained model
 model_name = 'model_name'
