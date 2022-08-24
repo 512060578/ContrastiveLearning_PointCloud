@@ -3,7 +3,8 @@ import matplotlib.pyplot as plt
 import tensorflow as tf
 import h5py
 import numpy as np
-from tqdm import tqdm 
+from tqdm import tqdm
+from utils import *
 
 # number of points in each sample
 num_points = 2048
@@ -12,29 +13,11 @@ num_points = 2048
 k = 40
 
 # def batch size
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 
-def load_h5(h5_filename):
-    f = h5py.File(h5_filename)
-    data = f['data'][:]
-    label = f['label'][:]
-    return (data, label)
 
-# load train points
-path = os.path.dirname(os.path.realpath(__file__))
-train_path = os.path.join(path, "Data_Train")
-filenames = [d for d in os.listdir(train_path)]
-print(train_path)
-print(filenames)
-train_points = None
-for d in filenames:
-    cur_points, _ = load_h5(os.path.join(train_path, d))
-    cur_points = cur_points.reshape(1, -1, 3)
-    if train_points is None:
-        train_points = cur_points
-    else:
-        train_points = np.hstack((train_points, cur_points))
-train_points_r = train_points.reshape(-1, num_points, 3)
+# Load Data
+train_points_r, _ = load_data("Data_Train", num_points)
 
 train_ds = tf.data.Dataset.from_tensor_slices(train_points_r)
 
@@ -46,6 +29,7 @@ train_ds = (
 )
 
 
+# The augmentation pipeline
 class CustomAugment(object):
     def __call__(self, sample):        
         # sample = self._random_apply(self.flip_point_cloud, sample, p=0.1)
@@ -118,29 +102,6 @@ class CustomAugment(object):
 # Build the augmentation pipeline
 data_augmentation = tf.keras.Sequential([tf.keras.layers.Lambda(CustomAugment())])
 
-
-def sim_func_dim1(x, y):
-    # x shape: (N, 1, C)
-    # y shape: (N, C, 1)
-    # v shape: (N, 1, 1)
-    v = tf.matmul(tf.expand_dims(x, 1), tf.expand_dims(y, 2))
-    return v
-
-
-def sim_func_dim2(x, y):
-    v = tf.tensordot(tf.expand_dims(x, 1), tf.expand_dims(tf.transpose(y), 0), axes=2)
-    # x shape: (N, 1, C)
-    # y shape: (1, C, 2N)
-    # v shape: (N, 2N)
-    return v
-
-def get_negative_mask(batch_size):
-    negative_mask = np.ones((batch_size, 2 * batch_size), dtype=bool)
-    for i in range(batch_size):
-        negative_mask[i, i] = 0
-        negative_mask[i, i + batch_size] = 0
-    return tf.constant(negative_mask)
-
 negative_mask = get_negative_mask(BATCH_SIZE)
             
 
@@ -180,10 +141,6 @@ def train_step(xis, xjs, model, optimizer, criterion, temperature):
     optimizer.apply_gradients(zip(gradients, model.trainable_variables))
 
     return loss
-
-class mat_mul(tf.keras.layers.Layer):
-    def call(self, A, B):
-        return tf.matmul(A, B)
 
 def get_pointnet_simclr(hidden_1, hidden_2, hidden_3):
     input_points = tf.keras.Input(shape=(num_points, 3))

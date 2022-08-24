@@ -6,6 +6,7 @@ import tensorflow as tf
 import seaborn as sns
 import numpy as np
 import h5py
+from utils import *
 
 
 # name of the trained model
@@ -19,58 +20,14 @@ num_points = 2048
 k = 40
 
 # def batch size
-BATCH_SIZE = 64
+BATCH_SIZE = 128
 
-def load_h5(h5_filename):
-    f = h5py.File(h5_filename)
-    data = f['data'][:]
-    label = f['label'][:]
-    return (data, label)
+# Load Training Data
+train_points_r, train_labels_r = load_data("Data_Train", num_points)
 
-# load train points and labels
-path = os.path.dirname(os.path.realpath(__file__))
-train_path = os.path.join(path, "Data_Train")
-filenames = [d for d in os.listdir(train_path)]
-print(train_path)
-print(filenames)
-train_points = None
-train_labels = None
-for d in filenames:
-    cur_points, cur_labels = load_h5(os.path.join(train_path, d))
-    cur_points = cur_points.reshape(1, -1, 3)
-    cur_labels = cur_labels.reshape(1, -1)
-    if train_labels is None or train_points is None:
-        train_labels = cur_labels
-        train_points = cur_points
-    else:
-        train_labels = np.hstack((train_labels, cur_labels))
-        train_points = np.hstack((train_points, cur_points))
-train_points_r = train_points.reshape(-1, num_points, 3)
-train_labels_r = train_labels.reshape(-1, 1)
+# load Testing Data
+test_points_r, test_labels_r = load_data("Data_Test", num_points)
 
-# load test points and labels
-test_path = os.path.join(path, "Data_Test")
-filenames = [d for d in os.listdir(test_path)]
-print(test_path)
-print(filenames)
-test_points = None
-test_labels = None
-for d in filenames:
-    cur_points, cur_labels = load_h5(os.path.join(test_path, d))
-    cur_points = cur_points.reshape(1, -1, 3)
-    cur_labels = cur_labels.reshape(1, -1)
-    if test_labels is None or test_points is None:
-        test_labels = cur_labels
-        test_points = cur_points
-    else:
-        test_labels = np.hstack((test_labels, cur_labels))
-        test_points = np.hstack((test_points, cur_points))
-test_points_r = test_points.reshape(-1, num_points, 3)
-test_labels_r = test_labels.reshape(-1, 1)
-
-class mat_mul(tf.keras.layers.Layer):
-    def call(self, A, B):
-        return tf.matmul(A, B)
 
 def get_pointnet_simclr(hidden_1, hidden_2, hidden_3):
     input_points = tf.keras.Input(shape=(num_points, 3))
