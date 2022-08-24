@@ -13,14 +13,17 @@ To download the full dataset:
 Unzip the downloaded file and put all the training `.h5` file into `Data_Train` folder. Then put all the testing `.h5` file into `Data_Test` folder.
 
 ## How to Run code
-# Training the model
+For ModelNet40, modify the `k` which represents the number of categories to 40
+For ModelNet10, modify the `k` which represents the number of categories to 10
+
+### Training the model
 Run `train.py`  
 Then the trained weight will be saved in the local.
 
-# Linear evaluation
+### Linear evaluation
 Modify the `model_name` in `linear_evaluation.py` to the weight saved by training the model  
 Run `linear_evaluation.py`  
 The plot for training history and t-SNE  will be saved.
 
-# Supervised model
+### Supervised model
 Run `supervised.py`
