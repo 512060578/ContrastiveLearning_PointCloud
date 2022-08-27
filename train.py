@@ -82,15 +82,12 @@ class CustomAugment(object):
 
         return flipped_data
 
-    def drop_point_cloud(self, batch_data, rate=0.01):
-        dropped_data = np.zeros(batch_data.shape, dtype=np.float32)
-        B, N, C = batch_data.shape
-        for k in range(batch_data.shape[0]):
-            point_list = np.random.choice(N, int(N*(1-rate)), replace=False)
-            for p in point_list:
-                dropped_data[k, p, ...] += batch_data[k, p, ...]
-            
-        return dropped_data
+    def drop_point_cloud(batch_data, rate=0.93):
+        for b in range(batch_data.shape[0]):
+            drop_idx = np.where(np.random.random((batch_data.shape[1]))<=rate)[0]
+            if len(drop_idx)>0:
+                batch_data[b,drop_idx,:] = 0 # set to the first point
+        return batch_data
     
     def _random_apply(self, func, x, p):
         return tf.cond(
