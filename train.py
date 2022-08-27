@@ -45,6 +45,7 @@ class CustomAugment(object):
         return sample
 
     def jitter_point_cloud(self, batch_data, sigma=0.05, clip=0.05):
+    # Applies a jittering toward each points
       B, N, C = batch_data.shape
       assert(clip > 0)
       jittered_data = np.clip(sigma * np.random.randn(B, N, C), -1 * clip, clip)
@@ -52,6 +53,7 @@ class CustomAugment(object):
       return jittered_data
 
     def rotate_point_cloud(self, batch_data):
+    #Rotate the object with a randomly generated angle
       rotated_data = np.zeros(batch_data.shape, dtype=np.float32)
       for k in range(batch_data.shape[0]):
           rotation_angle = np.random.uniform() * 2 * np.pi
@@ -65,7 +67,8 @@ class CustomAugment(object):
       return rotated_data
 
 
-    def transition_point_cloud(self, batch_data, clip=0.005):
+    def transition_point_cloud(self, batch_data, clip=0.1):
+    # Apply a transition for the whole object
         B, N, C = batch_data.shape
         assert(clip > 0)
         transition = np.clip(np.random.randn(1,1,C), -1 * clip, clip)
@@ -75,6 +78,7 @@ class CustomAugment(object):
     
 
     def flip_point_cloud(self, batch_data):
+    # Flip the whole object in the batch
         flipped_data = np.zeros(batch_data.shape, dtype=np.float32)
         for k in range(batch_data.shape[0]):
             shape_pc = batch_data[k, ...]
@@ -83,6 +87,7 @@ class CustomAugment(object):
         return flipped_data
 
     def drop_point_cloud(batch_data, rate=0.93):
+    # The rate of points in the object is remained and others are dropped
         dropped_data = np.zeros(batch_data.shape, dtype=np.float32)
         for b in range(batch_data.shape[0]):
             drop_idx = np.where(np.random.random((batch_data.shape[1]))<=rate)[0]
