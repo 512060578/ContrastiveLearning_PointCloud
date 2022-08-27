@@ -86,7 +86,7 @@ class CustomAugment(object):
         for b in range(batch_data.shape[0]):
             drop_idx = np.where(np.random.random((batch_data.shape[1]))<=rate)[0]
             if len(drop_idx)>0:
-                batch_data[b,drop_idx,:] = 0 # set to the first point
+                batch_data[b,drop_idx,:] = batch_data[b,0,:] # set to the first point
         return batch_data
     
     def _random_apply(self, func, x, p):
