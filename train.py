@@ -86,7 +86,8 @@ class CustomAugment(object):
 
         return flipped_data
 
-    def drop_point_cloud(self, batch_data, rate=0.01):
+    def drop_point_cloud(self, batch_data, rate=0.93):
+    # randomly drop points from each object
         dropped_data = np.zeros(batch_data.shape, dtype=np.float32)
         B, N, C = batch_data.shape
         for k in range(batch_data.shape[0]):
