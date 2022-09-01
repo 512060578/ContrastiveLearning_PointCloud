@@ -87,14 +87,18 @@ model.compile(optimizer='adam',
               loss='categorical_crossentropy',
               metrics=['accuracy'])
 
-for i in range(1,50):
-    model.fit(train_points_r, Y_train, batch_size=32, epochs=1, shuffle=True, verbose=1)
-    s = "Current epoch is:" + str(i)
-    print(s)
-    if i % 5 == 0:
-        score = model.evaluate(test_points_r, Y_test, verbose=1)
-        print('Test loss: ', score[0])
-        print('Test accuracy: ', score[1])
+history = model.fit(train_points_r, Y_train,  validation_data=(test_points_r, Y_test), batch_size=32, epochs=50, shuffle=True, verbose=1)
+
+plt.plot(history.history["loss"], label="train_loss")
+plt.plot(history.history["val_loss"], label="val_loss")
+plt.plot(history.history["accuracy"], label="train_acc")
+plt.plot(history.history["val_accuracy"], label="val_acc")
+plt.xlabel("Epoch #")
+plt.ylabel("Loss/Accuracy")
+plt.title("Training Loss and accuracy")
+plt.legend(loc="upper right")
+plt.savefig("supervise_loss.jpg")
+plt.show()
 
 # score the model
 score = model.evaluate(test_points_r, Y_test, verbose=1)
